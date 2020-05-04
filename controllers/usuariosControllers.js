@@ -1,5 +1,6 @@
+const urldb = require("../config/urldb.json")
 const Sequelize = require('sequelize');
-const sequelize = new Sequelize('mysql://sql10335514:jzlge6xKAy@sql10.freemysqlhosting.net:3306/sql10335514');
+const sequelize = new Sequelize(urldb);
 const jwt = require('jsonwebtoken');
 const firma = require("../config/firma.json");
 
