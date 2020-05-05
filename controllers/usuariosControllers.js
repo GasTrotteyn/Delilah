@@ -4,11 +4,12 @@ const sequelize = new Sequelize(urldb);
 const jwt = require('jsonwebtoken');
 const firma = require("../config/firma.json");
 
+
 function getProductos(req, res) {
     sequelize.query(`SELECT * FROM productos`)
         //// FALTA CALCULAR FAVORITOS ////////////////////
         .then((respuesta) => {
-            console.log(respuesta[0]);
+            //console.log(respuesta[0]);
             res.status(200).json(respuesta[0]);
         }).catch((error) => {
             console.log('salió por el cath del controller');
@@ -29,7 +30,7 @@ function postUsuario(req, res) {
         })
 }
 function darDeBajaUsuario(req, res) {
-    usuarioDeBaja = req.params.id;
+    usuarioDeBaja = req.id;
     sequelize.query(`UPDATE usuarios SET idRol=5 WHERE id=${usuarioDeBaja}`)
         .then((respuesta) => {
             res.status(200).send('usuario desactivado con éxito')
@@ -38,22 +39,25 @@ function darDeBajaUsuario(req, res) {
             res.status(500).send();
         })
 }
-async function login(req, res) {
+
+function login(req, res) {
     let entrante = req.body;
-    sequelize.query(`SELECT * FROM usuarios WHERE usuario='${entrante.usuario}' OR mail='${entrante.mail}'`)
+    sequelize.query(`SELECT * FROM usuarios WHERE usuario='${entrante.usuario}' OR mail='${entrante.mail}'`,{type: sequelize.QueryTypes.SELECT})
         .then((encontrado) => {
-            if (encontrado[0][0].password === entrante.password) {
-                let contenido = { usuario: encontrado.usuario, idRol: encontrado[0].idRol };
+            if (encontrado[0].password === entrante.password) {
+                let contenido = { id: encontrado[0].id, usuario: encontrado[0].usuario, idRol: encontrado[0].idRol };
                 let token = jwt.sign(contenido, firma);
-                res.status(200).json(token);
+                let respuesta = { token: token}
+                res.status(200).json(respuesta);
             } else {
-                res.status(404).send('usuario, mail o password incorrectos')
+                res.status(401).send('password incorrecta')
             };
         }).catch((error) => {
             console.log('salió por el cath del controller ' + error);
-            res.status(500).send();
+            res.status(404).send('Mail, usuario o password incorrectos.');
         });
 }
+
 
 module.exports = {
     getProductos,
