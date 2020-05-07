@@ -6,10 +6,11 @@ const firma = require("../config/firma.json");
 
 
 function getProductos(req, res) {
-    sequelize.query(`SELECT * FROM productos`)
+    sequelize.query(`SELECT * FROM productos WHERE disponible=1`,
+    {type: sequelize.QueryTypes.SELECT})
         //// FALTA CALCULAR FAVORITOS ////////////////////
         .then((respuesta) => {
-            res.status(200).json(respuesta[0]);
+            res.status(200).json(respuesta);
         }).catch((error) => {
             console.log('salió por el cath del controller');
             res.status(500).send();
