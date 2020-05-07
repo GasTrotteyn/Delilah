@@ -24,7 +24,6 @@ function estaLogueado(req, res, next) {
     try{
         const decodificado = jwt.verify(token, firma);
         if (decodificado) {
-            req.usuario = decodificado.usuario;
             req.idRol = decodificado.idRol;
             req.id = decodificado.id;
             next();

@@ -9,6 +9,6 @@ app.use(cors({ origin: '*' }), bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use('/usuarios', usuariosRoutes);
-//app.use('/admin', adminRoutes);
+app.use('/admin', adminRoutes);
 
 module.exports = app;

@@ -9,13 +9,13 @@ function getProductos(req, res) {
     sequelize.query(`SELECT * FROM productos`)
         //// FALTA CALCULAR FAVORITOS ////////////////////
         .then((respuesta) => {
-            //console.log(respuesta[0]);
             res.status(200).json(respuesta[0]);
         }).catch((error) => {
             console.log('salió por el cath del controller');
             res.status(500).send();
         })
 }
+
 function postUsuario(req, res) {
     usuarioNuevo = req.body;
     usuarioNuevo.idRol = 1;
@@ -29,6 +29,7 @@ function postUsuario(req, res) {
             res.status(500).send('Usuario o mail no disponibles');
         })
 }
+
 function darDeBajaUsuario(req, res) {
     usuarioDeBaja = req.id;
     sequelize.query(`UPDATE usuarios SET idRol=5 WHERE id=${usuarioDeBaja}`)
@@ -41,13 +42,20 @@ function darDeBajaUsuario(req, res) {
 }
 
 function login(req, res) {
-    let entrante = req.body;
-    sequelize.query(`SELECT * FROM usuarios WHERE usuario='${entrante.usuario}' OR mail='${entrante.mail}'`,{type: sequelize.QueryTypes.SELECT})
+    const entrante = req.body;
+    sequelize.query(`SELECT * FROM usuarios WHERE usuario=? OR mail=?`,
+        {
+            replacements: [entrante.usuario, entrante.mail],
+            type: sequelize.QueryTypes.SELECT
+        })
         .then((encontrado) => {
-            if (encontrado[0].password === entrante.password) {
-                let contenido = { id: encontrado[0].id, usuario: encontrado[0].usuario, idRol: encontrado[0].idRol };
-                let token = jwt.sign(contenido, firma);
-                let respuesta = { token: token}
+            if (encontrado[0].idRol === 5){
+                res.status(401).send('usuario inactivo')
+            }
+            else if (encontrado[0].password === entrante.password) {
+                let contenido = { id: encontrado[0].id, idRol: encontrado[0].idRol };
+                let token = jwt.sign(contenido, firma, { expiresIn: '2 hours' });
+                let respuesta = { token: token }
                 res.status(200).json(respuesta);
             } else {
                 res.status(401).send('password incorrecta')
