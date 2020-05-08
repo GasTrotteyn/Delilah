@@ -9,6 +9,7 @@ api.get('/empleados', adminMiddlewares.esAdmin, adminControllers.getEmpleados);
 api.post('/productos', adminMiddlewares.esAdmin, adminControllers.postProducto);
 api.put('/productos/:id', adminMiddlewares.esAdmin, adminControllers.putProducto);
 api.delete('/productos/:id', adminMiddlewares.esAdmin, adminControllers.deleteProducto);
+api.patch('/empleados', adminMiddlewares.esDueño, adminControllers.hacerAdmin)
 
 
 module.exports = api;

@@ -14,7 +14,7 @@ function getTodosProductos(req, res) {
 
 function getClientes(req, res) {
     sequelize.query(`SELECT * FROM usuarios WHERE idRol = 1 OR idRol = 5`,
-    { type: sequelize.QueryTypes.SELECT })
+        { type: sequelize.QueryTypes.SELECT })
         .then((respuesta) => {
             res.status(200).json(respuesta);
         }).catch((error) => {
@@ -24,7 +24,7 @@ function getClientes(req, res) {
 
 function getEmpleados(req, res) {
     sequelize.query(`SELECT * FROM usuarios WHERE idRol >1 AND idRol<5 `,
-    { type: sequelize.QueryTypes.SELECT })
+        { type: sequelize.QueryTypes.SELECT })
         .then((respuesta) => {
             res.status(200).json(respuesta);
         }).catch((error) => {
@@ -57,11 +57,11 @@ function putProducto(req, res) {
     disponible=:disponible WHERE id =:id`,
         { replacements: productoNuevo })
         .then((respuesta) => {
-            console.log(respuesta[0].affectedRows);
+            //console.log(respuesta[0].affectedRows);
             if (respuesta[0].affectedRows !== 0) {
-                res.status(201).send('producto modificado satisfactoriamente')
+                res.status(200).send('producto modificado satisfactoriamente')
             } else {
-                res.status(400).send('el producto no existe')
+                res.status(400).send('el producto que se desea modificar no existe')
             }
         }).catch((error) => {
             res.status(400).send('no se pudo modificar el producto: ' + error)
@@ -83,11 +83,28 @@ function deleteProducto(req, res) {
         })
 }
 
+function hacerAdmin(req, res) {
+    let nuevoAdmin = req.body;
+    sequelize.query('UPDATE usuarios SET idRol=:idRol WHERE id=:id',
+        { replacements: nuevoAdmin })
+        .then((respuesta) => {
+            //console.log(respuesta[0].affectedRows);
+            if (respuesta[0].affectedRows !== 0) {
+                res.status(202).send('usuario modificado satisfactoriamente')
+            } else {
+                res.status(400).send('el usuario que se desea modificar no existe')
+            }
+        }).catch((error) => {
+            res.status(400).send('no se pudo modificar el usuario: ' + error)
+        })
+}
+
 module.exports = {
     getTodosProductos,
     getClientes,
     getEmpleados,
     postProducto,
     putProducto,
-    deleteProducto
+    deleteProducto,
+    hacerAdmin
 }

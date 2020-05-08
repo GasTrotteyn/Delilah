@@ -20,7 +20,20 @@ function esAdmin(req, res, next) {
 }
 
 function esDueño(req, res, next) {
-    next();
+    const token = req.headers.authorization.split(' ')[1];
+    try {
+        const decodificado = jwt.verify(token, firma);
+        if (decodificado.idRol === 4) {
+            req.idRol = decodificado.idRol;
+            req.id = decodificado.id;
+            next();
+        } else {
+            res.status(401).send('no tiene permiso para esta operación')
+        }
+    }
+    catch (error) {
+        res.status(401).send('login inválido')
+    }
 }
 module.exports = {
     esAdmin,
