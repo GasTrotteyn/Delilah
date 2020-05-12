@@ -84,47 +84,61 @@ function login(req, res) {
 function postPedido(req, res) {
     let hora = moment().format("YYYY-DD-MM HH:mm:ss");
     let { idFormaDePago, detalles } = req.body;
-    sequelize
-        .query(
-            "INSERT INTO pedidos (idUsuario, idFormaDePago, idEstado, hora) VALUES (?,?,?,?)",
-            {
-                replacements: [req.id, idFormaDePago, 1, hora],
-            }
-        )
-        .then((respuesta) => {
-            //console.log(respuesta);
-            detalles.forEach((element) => {
-                postRenglon(element, respuesta[0]);
+    let precioTotal = 0;
+    let idPedido = 0;
+    sequelize.query("INSERT INTO pedidos (idUsuario, idFormaDePago, idEstado, hora) VALUES (?,?,?,?)",
+        { replacements: [req.id, idFormaDePago, 1, hora] }
+    ).then((respuesta) => {
+        console.log('se insertó el pedido con id nro: ' + respuesta[0]);
+        idPedido = respuesta[0];
+        let detallesPosteados = new Promise(function (resolve, reject) {
+            detalles.forEach(async function (element) {
+                let posteo = await postRenglon(element, respuesta[0])
+                try {
+                    console.log('se insertó el renglón con id nro: ' + posteo[0][0] + ' y su valor subtotal es: ' + posteo[1])
+                    precioTotal = precioTotal + posteo[1];
+                    resolve(precioTotal);
+                } catch (error) {
+                    reject(error);
+                }
             });
+        })
+        detallesPosteados.then(function (response) {
+
+            console.log(precioTotal);
+            sequelize.query(`UPDATE pedidos SET precioTotal=${precioTotal} WHERE id = ${idPedido}`,
+                { replacements: [precioTotal] })
             res.status(201).send("Pedido registrado exitosamente");
-        });
+
+        }).catch(function (error) {
+            console.log(error);
+        })
+    });
 }
 
-async function postRenglon(objetoRenglon, idPedido) {
-    const { idProducto, cantidad } = objetoRenglon;
-    let precioRenglon;
-    calcularPrecioRenglon(idProducto, cantidad).then((respuesta) => {
-        precioRenglon = respuesta;
-        console.log(precioRenglon);
-        sequelize
-            .query(
-                "INSERT INTO renglones (idPedido, idProducto, cantidad, precioRenglon) VALUES (?,?,?,?)",
-                {
-                    replacements: [
-                        idPedido,
-                        idProducto,
-                        cantidad,
-                        precioRenglon,
-                    ],
-                }
+function postRenglon(objetoRenglon, idPedido) {
+    return new Promise(function (resolve, reject) {
+        const { idProducto, cantidad } = objetoRenglon;
+        let precioRenglon;
+        calcularPrecioRenglon(idProducto, cantidad).then((respuesta) => {
+            precioRenglon = respuesta;
+            sequelize.query("INSERT INTO renglones (idPedido, idProducto, cantidad, precioRenglon) VALUES (?,?,?,?)",
+                { replacements: [idPedido, idProducto, cantidad, precioRenglon] }
             )
-            .then((respuesta) => {
-                console.log(respuesta);
-            })
-            .catch((error) => {
-                console.log("moco" + error);
-            });
-    });
+                .then((respuesta) => {
+                    if (respuesta.length !== 0) {
+                        resolve([respuesta, precioRenglon]);
+                    } else {
+                        reject('no se pudo crear el renglon')
+                    }
+                })
+                .catch((error) => {
+                    console.log('no se pudo crear el renglon' + error);
+                });
+        }).catch((error) => {
+            console.log('no se pudo calcular el precio del renglon, renglon no insertado ' + error);
+        });
+    })
 }
 
 function calcularPrecioRenglon(idProducto, cantidad) {
@@ -135,10 +149,14 @@ function calcularPrecioRenglon(idProducto, cantidad) {
                 type: sequelize.QueryTypes.SELECT,
             })
             .then((respuesta) => {
-                ////falta un if que evalúe que salio todo bien y hacerle el reject + maneja rel falloen la llamada.//////
-                precioRenglon = respuesta[0].precioUnitario * cantidad;
-                console.log("dentro de calcular" + precioRenglon);
-                resolve(precioRenglon);
+                //console.log(respuesta.length);
+                if (respuesta.length !== 0) {
+                    precioRenglon = respuesta[0].precioUnitario * cantidad;
+                    //console.log("dentro de calcular" + precioRenglon);
+                    resolve(precioRenglon);
+                } else {
+                    reject('No hay precio unitario')
+                }
             })
             .catch((error) => {
                 console.log(error);
@@ -147,11 +165,11 @@ function calcularPrecioRenglon(idProducto, cantidad) {
 }
 
 // function aVerElCalculo() {
-//     let precioRenglon = calcularPrecioRenglon(1, 4)
+//     let precioRenglon = calcularPrecioRenglon(19, 4)
 //         .then((respuesta) => {
 //             console.log(respuesta)
 //         }).catch((error) => {
-//             console.log(error);
+//             console.log('salio por el catch de afuera' + error);
 //         })
 // }
 
