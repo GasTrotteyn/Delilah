@@ -7,7 +7,7 @@ api2.post('/usuario', usuariosMiddlewares.datosCompletosRegistro, usuariosContro
 api2.post('/login', usuariosMiddlewares.datosCompletosLogin, usuariosControllers.login);
 api2.patch('/desactivar', usuariosMiddlewares.estaLogueado, usuariosControllers.darDeBajaUsuario);
 api2.get('/productos', usuariosMiddlewares.estaLogueado, usuariosControllers.getProductos);
-//api2.post('/pedido', usuariosMiddlewares.estaLogueado, usuariosMiddlewares.datosCompletosPedido, usuariosControllers.postPedido)
+api2.post('/pedido', usuariosMiddlewares.estaLogueado, usuariosMiddlewares.datosComlpetosPedido, usuariosControllers.postPedido)
 
 
 

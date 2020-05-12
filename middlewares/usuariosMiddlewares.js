@@ -36,9 +36,19 @@ function estaLogueado(req, res, next) {
     }
 }
 
+function datosComlpetosPedido (req, res, next) {
+    let datos = req.body;
+    if (datos.detalles && datos.idFormaDePago) {
+        next();
+    } else {
+        res.status(400).send('faltan datos, llenar todos los campos')
+    }
+}
+
 module.exports = {
     estaLogueado,
     datosCompletosRegistro,
     datosCompletosLogin,
-    estaLogueado
+    estaLogueado,
+    datosComlpetosPedido
 }

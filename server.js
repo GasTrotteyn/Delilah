@@ -1,6 +1,6 @@
 const urldb = require ("./config/urldb")
 const server = require('./app.js');
-const port = 3000
+const port = 3001
 const Sequelize = require('sequelize');
 const sequelize = new Sequelize(urldb);
 

@@ -35,9 +35,19 @@ function esDueño(req, res, next) {
         res.status(401).send('login inválido')
     }
 }
+
+function datosCompletosHacerAdmin(req, res, next) {
+    let datos = req.body;
+    if (datos.id && datos.idRol <= 5) {
+        next();
+    } else {
+        res.status(400).send('faltan datos, o alguno es inválido')
+    }
+}
+
 module.exports = {
     esAdmin,
-    esDueño
-
+    esDueño,
+    datosCompletosHacerAdmin
 }
 
