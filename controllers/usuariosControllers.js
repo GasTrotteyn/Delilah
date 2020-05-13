@@ -5,13 +5,16 @@ const jwt = require("jsonwebtoken");
 const firma = require("../config/firma.json");
 const moment = require("moment");
 
-function getProductos(req, res) {
-    sequelize
-        .query(`SELECT * FROM productos WHERE disponible=1`, {
-            type: sequelize.QueryTypes.SELECT,
-        })
-        //// FALTA CALCULAR FAVORITOS ////////////////////
+async function getProductos(req, res) {
+    sequelize.query(`SELECT * FROM productos WHERE disponible=1`, {
+        type: sequelize.QueryTypes.SELECT,
+    })
         .then((respuesta) => {
+            arrayProductosDisponibles = respuesta;
+            sequelize.query(`///////////////// ALTO JOIN PARA FAVORITOS/////SELECT nombre, urlFoto, precio FROM productos WHERE disponible=1`)
+                .then(() => {
+
+                })
             res.status(200).json(respuesta);
         })
         .catch((error) => {
@@ -81,8 +84,6 @@ function login(req, res) {
         });
 }
 
-
-
 function postPedido(req, res) {
     let hora = moment().format("YYYY-MM-DD HH:mm:ss");
     let { idFormaDePago, detalles } = req.body;
@@ -94,7 +95,7 @@ function postPedido(req, res) {
             .then((precioTotal) => {
                 sequelize.query(`UPDATE pedidos SET precioTotal=${precioTotal} WHERE id = ${idPedido}`)
             }).then((terminado) => {
-                res.status(201).send("Pedido registrado exitosamente");
+                res.status(201).json({ idPedido: idPedido });
             })
             .catch((error) => {
                 console.log(error);
@@ -112,13 +113,12 @@ function postRenglones(detalles, idPedido) {
             calcularPrecioRenglon(idProducto, cantidad)
                 .then((precioRenglon) => {
                     precioTotal = precioTotal + precioRenglon;
-                    console.log(precioTotal);
+                    //console.log(precioTotal);
                     sequelize.query("INSERT INTO renglones (idPedido, idProducto, cantidad, precioRenglon) VALUES (?,?,?,?)",
                         { replacements: [idPedido, idProducto, cantidad, precioRenglon] }
                     ).then((posteado) => {
-                        console.log('insertado el renglón ' + posteado[0]);
+                        //console.log('insertado el renglón ' + posteado[0]);
                         resolve(precioTotal);
-
                     })
                 }).catch((error) => {
                     console.log(error)
@@ -129,7 +129,7 @@ function postRenglones(detalles, idPedido) {
 
 function calcularPrecioRenglon(idProducto, cantidad) {
     return new Promise(function (resolve, reject) {
-        sequelize.query("SELECT precioUnitario FROM productos WHERE id = ?", {
+        sequelize.query("SELECT precioUnitario FROM productos WHERE id = ? AND disponible =1", {
             replacements: [idProducto],
             type: sequelize.QueryTypes.SELECT,
         })
@@ -147,55 +147,36 @@ function calcularPrecioRenglon(idProducto, cantidad) {
     });
 }
 
-// function sumarTotal (array) {
-//     let total= 0;
-//     array.forEach(element =>{
-//         total = total + element;
-//     })
-//     console.log (total);
+function cancelarPedido(req, res) {
+    let cancelado = req.params.id;
+    sequelize.query('SELECT idEstado FROM pedidos WHERE id=?',
+        {
+            replacements: [cancelado],
+            type: sequelize.QueryTypes.SELECT
+        })
+        .then((respuesta) => {
+            let estadoDelCancelado = respuesta[0].idEstado;
+            if (estadoDelCancelado < 4) {
+                sequelize.query('UPDATE pedidos SET idEstado=5 WHERE id=?',
+                    {replacements: [cancelado]}
+                ).then((resp)=>{
+                    let mensaje = {
+                        horaCancelación: moment().format("YYYY-MM-DD HH:mm:ss"),
+                        idPedido: cancelado,
+                        idCancelador: req.id,
+                        detalles: resp[0].info
+                    }
+                    res.status(200).json(mensaje);
+                })
+            }else{
+                res.status(401).send('el pedido ya fue enviado, no se puede cancelar')
+            }
+        }).catch((error) => {
+            console.log(error);
+            res.status(400).send('el pedido que se desea cancelar no existe')
+        })
 
-// }
-
-//sumarTotal([2,5,7,9,4,8,45]);
-// function postRenglon(objetoRenglon, idPedido) {
-//     return new Promise(function (resolve, reject) {
-//         const { idProducto, cantidad } = objetoRenglon;
-//         let precioRenglon;
-//         calcularPrecioRenglon(idProducto, cantidad).then((respuesta) => {
-//             precioRenglon = respuesta;
-//             sequelize.query("INSERT INTO renglones (idPedido, idProducto, cantidad, precioRenglon) VALUES (?,?,?,?)",
-//                 { replacements: [idPedido, idProducto, cantidad, precioRenglon] }
-//             )
-//                 .then((respuesta) => {
-//                     if (respuesta.length !== 0) {
-//                         resolve([respuesta, precioRenglon]);
-//                     } else {
-//                         reject('no se pudo crear el renglon')
-//                     }
-//                 })
-//                 .catch((error) => {
-//                     console.log('no se pudo crear el renglon' + error);
-//                 });
-//         }).catch((error) => {
-//             console.log('no se pudo calcular el precio del renglon, renglon no insertado ' + error);
-//         });
-//     })
-// }
-
-
-
-
-
-// function aVerElCalculo() {
-//     let precioRenglon = calcularPrecioRenglon(1, 4)
-//         .then((respuesta) => {
-//             console.log(respuesta)
-//         }).catch((error) => {
-//             console.log('salio por el catch de afuera ' + error);
-//         })
-// }
-
-// aVerElCalculo();
+}
 
 module.exports = {
     getProductos,
@@ -203,4 +184,5 @@ module.exports = {
     darDeBajaUsuario,
     login,
     postPedido,
+    cancelarPedido
 };
