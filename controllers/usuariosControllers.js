@@ -81,8 +81,10 @@ function login(req, res) {
         });
 }
 
+
+
 function postPedido(req, res) {
-    let hora = moment().format("YYYY-DD-MM HH:mm:ss");
+    let hora = moment().format("YYYY-MM-DD HH:mm:ss");
     let { idFormaDePago, detalles } = req.body;
     sequelize.query("INSERT INTO pedidos (idUsuario, idFormaDePago, idEstado, hora) VALUES (?,?,?,?)",
         { replacements: [req.id, idFormaDePago, 1, hora] }
@@ -91,9 +93,9 @@ function postPedido(req, res) {
         postRenglones(detalles, idPedido)
             .then((precioTotal) => {
                 sequelize.query(`UPDATE pedidos SET precioTotal=${precioTotal} WHERE id = ${idPedido}`)
-                }).then((terminado)=>{
-                    res.status(201).send("Pedido registrado exitosamente");
-                })
+            }).then((terminado) => {
+                res.status(201).send("Pedido registrado exitosamente");
+            })
             .catch((error) => {
                 console.log(error);
                 res.status(500).send();
@@ -115,17 +117,13 @@ function postRenglones(detalles, idPedido) {
                         { replacements: [idPedido, idProducto, cantidad, precioRenglon] }
                     ).then((posteado) => {
                         console.log('insertado el renglón ' + posteado[0]);
+                        resolve(precioTotal);
+
                     })
                 }).catch((error) => {
                     console.log(error)
                 })
         });
-        if (precioTotal !== 0) {
-            console.log(precioTotal);
-            resolve(precioTotal);
-        } else {
-            reject('no hay suma');
-        }
     })
 }
 
@@ -149,14 +147,14 @@ function calcularPrecioRenglon(idProducto, cantidad) {
     });
 }
 
-function sumarTotal (array) {
-    let total= 0;
-    array.forEach(element =>{
-        total = total + element;
-    })
-    console.log (total);
+// function sumarTotal (array) {
+//     let total= 0;
+//     array.forEach(element =>{
+//         total = total + element;
+//     })
+//     console.log (total);
 
-}
+// }
 
 //sumarTotal([2,5,7,9,4,8,45]);
 // function postRenglon(objetoRenglon, idPedido) {
