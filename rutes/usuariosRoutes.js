@@ -8,7 +8,8 @@ api2.post('/login', usuariosMiddlewares.datosCompletosLogin, usuariosControllers
 api2.patch('/desactivar', usuariosMiddlewares.estaLogueado, usuariosControllers.darDeBajaUsuario);
 api2.get('/productos', usuariosMiddlewares.estaLogueado, usuariosControllers.getProductos);
 api2.post('/pedido', usuariosMiddlewares.estaLogueado, usuariosMiddlewares.datosComlpetosPedido, usuariosControllers.postPedido);
-api2.patch('/pedido/cancelar/:id', usuariosMiddlewares.estaLogueado, usuariosControllers.cancelarPedido)
+api2.patch('/pedido/cancelar/:id', usuariosMiddlewares.estaLogueado, usuariosControllers.cancelarPedido);
+api2.get('/productos/favoritos', usuariosMiddlewares.estaLogueado, usuariosControllers.getFavoritos)
 
 
 

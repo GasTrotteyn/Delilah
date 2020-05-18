@@ -10,6 +10,6 @@ api.post('/productos', adminMiddlewares.esAdmin, adminControllers.postProducto);
 api.put('/productos/:id', adminMiddlewares.esAdmin, adminControllers.putProducto);
 api.delete('/productos/:id', adminMiddlewares.esAdmin, adminControllers.deleteProducto);
 api.patch('/empleados', adminMiddlewares.esDueño, adminMiddlewares.datosCompletosHacerAdmin, adminControllers.hacerAdmin)
-
+api.get('/pedidos', adminMiddlewares.esAdmin, adminControllers.getPedidos)
 
 module.exports = api;

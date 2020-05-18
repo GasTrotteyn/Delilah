@@ -9,18 +9,40 @@ async function getProductos(req, res) {
     sequelize.query(`SELECT * FROM productos WHERE disponible=1`, {
         type: sequelize.QueryTypes.SELECT,
     })
-        .then((respuesta) => {
-            arrayProductosDisponibles = respuesta;
-            sequelize.query(`///////////////// ALTO JOIN PARA FAVORITOS/////SELECT nombre, urlFoto, precio FROM productos WHERE disponible=1`)
-                .then(() => {
-
-                })
-            res.status(200).json(respuesta);
+        .then(async function (respuesta) {
+            let favoritos = await getFavoritos(req.id);
+            res.status(200).json({
+                favoritos: favoritos,
+                disponibles: respuesta});
         })
         .catch((error) => {
             console.log("salió por el cath del controller");
             res.status(500).send();
         });
+}
+
+function getFavoritos(idUsuario) {
+    return new Promise(function (resolve, reject) {
+        sequelize.query(`SELECT pr.nombre, pr.urlFoto, pr.precioUnitario
+        FROM renglones r
+        JOIN productos pr ON r.idProducto = pr.id
+        JOIN pedidos pd ON r.idPedido = pd.id
+        JOIN usuarios u ON pd.idUsuario = u.id WHERE u.id = ?
+        ORDER BY pr.nombre ASC`,
+            {
+                replacements: [idUsuario],
+            })
+            .then((respuesta) => {
+                let productos = respuesta[0];
+                let agrupado = productos.reduce(function (acc, element) {
+                    acc[element.nombre] = acc[element.nombre] + 1 || 1;
+                    return acc;
+                }, {});
+                resolve(agrupado);
+            }).catch((error) => {
+                reject(error);
+            })
+    })
 }
 
 function postUsuario(req, res) {
@@ -158,8 +180,8 @@ function cancelarPedido(req, res) {
             let estadoDelCancelado = respuesta[0].idEstado;
             if (estadoDelCancelado < 4) {
                 sequelize.query('UPDATE pedidos SET idEstado=5 WHERE id=?',
-                    {replacements: [cancelado]}
-                ).then((resp)=>{
+                    { replacements: [cancelado] }
+                ).then((resp) => {
                     let mensaje = {
                         horaCancelación: moment().format("YYYY-MM-DD HH:mm:ss"),
                         idPedido: cancelado,
@@ -168,7 +190,7 @@ function cancelarPedido(req, res) {
                     }
                     res.status(200).json(mensaje);
                 })
-            }else{
+            } else {
                 res.status(401).send('el pedido ya fue enviado, no se puede cancelar')
             }
         }).catch((error) => {
@@ -180,6 +202,7 @@ function cancelarPedido(req, res) {
 
 module.exports = {
     getProductos,
+    getFavoritos,
     postUsuario,
     darDeBajaUsuario,
     login,

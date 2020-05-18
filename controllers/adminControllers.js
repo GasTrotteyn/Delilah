@@ -99,6 +99,28 @@ function hacerAdmin(req, res) {
         })
 }
 
+function getPedidos(req, res) {
+    sequelize.query(`SELECT p.idEstado, e.descripcion AS estado, p.hora, p.id AS idPedido , pr.nombre AS producto, r.cantidad, 
+    fp.descripcion AS formaDePago, p.precioTotal, u.nombre, u.apellido, u.direccion
+    FROM pedidos p
+    JOIN renglones r ON p.id = r.idPedido
+    JOIN productos pr ON r.idProducto = pr.id
+    JOIN usuarios u ON p.idUsuario = u.id
+    JOIN estados e ON p.idEstado = e.id
+    JOIN formasDePago fp ON p.idFormaDePago = fp.id
+    ORDER BY idPedido DESC`
+    ).then((respuesta) => {
+        let pedidos = respuesta[0];
+        let agrupado = pedidos.reduce(function (acc, element) {
+            acc[element.idPedido] = acc[element.idPedido] || [];
+            acc[element.idPedido].push(element);
+            return acc;
+        }, Object.create(null));
+        res.status(200).json(agrupado);
+    }).catch((error) => {
+        res.status(500).send(error);
+    })
+}
 module.exports = {
     getTodosProductos,
     getClientes,
@@ -106,5 +128,6 @@ module.exports = {
     postProducto,
     putProducto,
     deleteProducto,
-    hacerAdmin
+    hacerAdmin,
+    getPedidos
 }
