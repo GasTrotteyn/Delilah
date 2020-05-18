@@ -9,7 +9,7 @@ api2.patch('/desactivar', usuariosMiddlewares.estaLogueado, usuariosControllers.
 api2.get('/productos', usuariosMiddlewares.estaLogueado, usuariosControllers.getProductos);
 api2.post('/pedido', usuariosMiddlewares.estaLogueado, usuariosMiddlewares.datosComlpetosPedido, usuariosControllers.postPedido);
 api2.patch('/pedido/cancelar/:id', usuariosMiddlewares.estaLogueado, usuariosControllers.cancelarPedido);
-api2.get('/productos/favoritos', usuariosMiddlewares.estaLogueado, usuariosControllers.getFavoritos)
+api2.get('/pedido/estado/:idPedido', usuariosMiddlewares.estaLogueado, usuariosControllers.getEstado)
 
 
 

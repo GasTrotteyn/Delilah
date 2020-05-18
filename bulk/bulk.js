@@ -5,11 +5,11 @@ const fs = require('fs');
 
 function cargarProductosDesdeCSV(file) {
     fs.readFile(file, 'utf8', async function (err, data) {
-        var dataArray = data.split(/\r?\n/);
-        dataArray.forEach(element => {
+        var productos = data.split(/\r?\n/);
+        productos.forEach(element => {
             let registro = element.split("|");
             console.log(registro);
-            sequelize.query(`INSERT INTO productos (nombre, precioUnitario, urlFoto, disponible) 
+            sequelize.query(`INSERT INTO productos (nombre, precioUnitario, urlFoto, disponible)
             VALUES ('${registro[0]}', ${registro[1]}, '${registro[2]}', ${registro[3]} )`,
             ).then((respuesta) => {
                 console.log(respuesta);
@@ -22,11 +22,11 @@ function cargarProductosDesdeCSV(file) {
 
 function cargarUsuariosDesdeCSV(file) {
     fs.readFile(file, 'utf8', async function (err, data) {
-        var dataArray = data.split(/\r?\n/);
-        dataArray.forEach(element => {
+        var usuarios = data.split(/\r?\n/);
+        usuarios.forEach(element => {
             let registro = element.split("|");
             console.log(registro);
-            sequelize.query(`INSERT INTO usuarios (idRol, usuario, password, mail, nombre, apellido, telefono, direccion) 
+            sequelize.query(`INSERT INTO usuarios (idRol, usuario, password, mail, nombre, apellido, telefono, direccion)
             VALUES (${registro[0]},'${registro[1]}','${registro[2]}','${registro[3]}','${registro[4]}','${registro[5]}','${registro[6]}','${registro[7]}')`,
             ).then((respuesta) => {
                 console.log(respuesta);
@@ -36,10 +36,5 @@ function cargarUsuariosDesdeCSV(file) {
         });
     })
 }
-//cargarProductosDesdeCSV('productos7.csv');
+//cargarProductosDesdeCSV('productos.csv');
 //cargarUsuariosDesdeCSV('usuarios.csv');
-
-
-
-
-

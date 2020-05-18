@@ -9,7 +9,8 @@ api.get('/empleados', adminMiddlewares.esAdmin, adminControllers.getEmpleados);
 api.post('/productos', adminMiddlewares.esAdmin, adminControllers.postProducto);
 api.put('/productos/:id', adminMiddlewares.esAdmin, adminControllers.putProducto);
 api.delete('/productos/:id', adminMiddlewares.esAdmin, adminControllers.deleteProducto);
-api.patch('/empleados', adminMiddlewares.esDueño, adminMiddlewares.datosCompletosHacerAdmin, adminControllers.hacerAdmin)
-api.get('/pedidos', adminMiddlewares.esAdmin, adminControllers.getPedidos)
+api.patch('/empleados', adminMiddlewares.esDueño, adminMiddlewares.datosCompletosHacerAdmin, adminControllers.hacerAdmin);
+api.get('/pedidos', adminMiddlewares.esAdmin, adminControllers.getPedidos);
+api.patch('/pedidos/estados/:idPedido', adminMiddlewares.esAdmin, adminControllers.cambiarEstado)
 
 module.exports = api;

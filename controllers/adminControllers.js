@@ -1,6 +1,7 @@
 const urldb = require("../config/urldb.json")
 const Sequelize = require('sequelize');
 const sequelize = new Sequelize(urldb);
+const moment = require("moment");
 
 function getTodosProductos(req, res) {
     sequelize.query(`SELECT * FROM productos`,
@@ -121,13 +122,40 @@ function getPedidos(req, res) {
         res.status(500).send(error);
     })
 }
-module.exports = {
-    getTodosProductos,
-    getClientes,
-    getEmpleados,
-    postProducto,
-    putProducto,
-    deleteProducto,
-    hacerAdmin,
-    getPedidos
+
+function cambiarEstado(req, res) {
+    let idPedido = parseInt(req.params.idPedido);
+    let idEstado = req.body.idEstado;
+    sequelize.query(
+        `UPDATE pedidos SET idEstado = ? WHERE id = ?`,
+        { replacements: [idEstado, idPedido] })
+        .then((estado) => {
+            console.log('lineas afectadas ' + estado[0].affectedRows);
+            if (estado[0].affectedRows) {
+                let mensaje = {
+                    horaModificación: moment().format("YYYY-MM-DD HH:mm:ss"),
+                    idPedido: idPedido,
+                    idModificador: req.id,
+                    detalles: estado[0].info
+                }
+                res.status(200).json(mensaje)
+
+            } else {
+                res.status(400).send('el pedido que se desea modificar no existe ó ya tiene el estado solicitado')
+            }
+        }).catch((error) => {
+            res.status(401).send('el idEstado introducido no es válido ' + error)
+        })
 }
+
+    module.exports = {
+        getTodosProductos,
+        getClientes,
+        getEmpleados,
+        postProducto,
+        putProducto,
+        deleteProducto,
+        hacerAdmin,
+        getPedidos,
+        cambiarEstado
+    }

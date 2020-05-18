@@ -13,7 +13,8 @@ async function getProductos(req, res) {
             let favoritos = await getFavoritos(req.id);
             res.status(200).json({
                 favoritos: favoritos,
-                disponibles: respuesta});
+                disponibles: respuesta
+            });
         })
         .catch((error) => {
             console.log("salió por el cath del controller");
@@ -200,6 +201,26 @@ function cancelarPedido(req, res) {
 
 }
 
+function getEstado(req, res) {
+    let idPedido = req.params.idPedido;
+    sequelize.query(
+        `SELECT estados.descripcion
+        FROM pedidos
+        JOIN estados ON pedidos.idEstado = estados.id WHERE pedidos.id = ?`,
+        {
+            replacements: [idPedido],
+            type: sequelize.QueryTypes.SELECT
+        }).then((estado)=>{
+            if (estado.length!== 0){
+                res.status(200).json(estado[0]);
+            }else{
+                res.status(400).send('el pedido que se desea consultar no existe')
+            }
+        }).catch((error)=>{
+            res.status(400).send(error)
+        })
+}
+
 module.exports = {
     getProductos,
     getFavoritos,
@@ -207,5 +228,6 @@ module.exports = {
     darDeBajaUsuario,
     login,
     postPedido,
-    cancelarPedido
+    cancelarPedido,
+    getEstado
 };
