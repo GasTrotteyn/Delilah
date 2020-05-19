@@ -17,8 +17,7 @@ async function getProductos(req, res) {
             });
         })
         .catch((error) => {
-            console.log("salió por el cath del controller");
-            res.status(500).send();
+            res.status(500).send(error);
         });
 }
 
@@ -59,8 +58,7 @@ function postUsuario(req, res) {
             res.status(201).send("usuario creado con éxito");
         })
         .catch((error) => {
-            console.log("salió por el cath del controller " + error);
-            res.status(500).send("Usuario o mail no disponibles");
+            res.status(500).send("Usuario o mail no disponibles " + error);
         });
 }
 
@@ -72,8 +70,7 @@ function darDeBajaUsuario(req, res) {
             res.status(200).send("usuario desactivado con éxito");
         })
         .catch((error) => {
-            console.log("salió por el cath del controller " + error);
-            res.status(500).send();
+            res.status(500).send(error);
         });
 }
 
@@ -102,8 +99,7 @@ function login(req, res) {
             }
         })
         .catch((error) => {
-            console.log("salió por el cath del controller " + error);
-            res.status(404).send("Mail, usuario o password incorrectos.");
+            res.status(404).send("Mail, usuario o password incorrectos. " + error);
         });
 }
 
@@ -121,8 +117,7 @@ function postPedido(req, res) {
                 res.status(201).json({ idPedido: idPedido });
             })
             .catch((error) => {
-                console.log(error);
-                res.status(500).send();
+                res.status(500).send(error);
             });
     }
     )
@@ -136,11 +131,9 @@ function postRenglones(detalles, idPedido) {
             calcularPrecioRenglon(idProducto, cantidad)
                 .then((precioRenglon) => {
                     precioTotal = precioTotal + precioRenglon;
-                    //console.log(precioTotal);
                     sequelize.query("INSERT INTO renglones (idPedido, idProducto, cantidad, precioRenglon) VALUES (?,?,?,?)",
                         { replacements: [idPedido, idProducto, cantidad, precioRenglon] }
                     ).then((posteado) => {
-                        //console.log('insertado el renglón ' + posteado[0]);
                         resolve(precioTotal);
                     })
                 }).catch((error) => {
@@ -195,8 +188,7 @@ function cancelarPedido(req, res) {
                 res.status(401).send('el pedido ya fue enviado, no se puede cancelar')
             }
         }).catch((error) => {
-            console.log(error);
-            res.status(400).send('el pedido que se desea cancelar no existe')
+            res.status(400).send('el pedido que se desea cancelar no existe ' + error)
         })
 
 }
@@ -210,13 +202,13 @@ function getEstado(req, res) {
         {
             replacements: [idPedido],
             type: sequelize.QueryTypes.SELECT
-        }).then((estado)=>{
-            if (estado.length!== 0){
+        }).then((estado) => {
+            if (estado.length !== 0) {
                 res.status(200).json(estado[0]);
-            }else{
+            } else {
                 res.status(400).send('el pedido que se desea consultar no existe')
             }
-        }).catch((error)=>{
+        }).catch((error) => {
             res.status(400).send(error)
         })
 }

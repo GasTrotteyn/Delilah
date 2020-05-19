@@ -1,0 +1,504 @@
+{
+	"info": {
+		"_postman_id": "07f66468-3d9e-4b96-8708-e8a96e29c79a",
+		"name": "DELILAH",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "admin",
+			"item": [
+				{
+					"name": "GET TODOS LOS PRODUCTOS",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiaWRSb2wiOjIsImlhdCI6MTU4OTQ1OTcwOSwiZXhwIjoxNTg5NDY2OTA5fQ.8XBN7OYyQpVkA-9Xz4gmdi8ra8lS8hoqK08uiKh6ZW4",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/admin/productos",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"admin",
+								"productos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST UN PRODUCTO",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiaWRSb2wiOjIsImlhdCI6MTU4OTQ1OTcwOSwiZXhwIjoxNTg5NDY2OTA5fQ.8XBN7OYyQpVkA-9Xz4gmdi8ra8lS8hoqK08uiKh6ZW4",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\t\"nombre\": \"papas grandes\",\r\n        \"precioUnitario\": 180.00,\r\n        \"urlFoto\": \"localhost/imagenes/6.jpg\",\r\n        \"disponible\": 1\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/admin/productos",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"admin",
+								"productos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT A PRODUCTOS",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiaWRSb2wiOjIsImlhdCI6MTU4OTQ1OTcwOSwiZXhwIjoxNTg5NDY2OTA5fQ.8XBN7OYyQpVkA-9Xz4gmdi8ra8lS8hoqK08uiKh6ZW4",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\t\"nombre\": \"metido con put papas fritas grandes6\",\r\n        \"precioUnitario\": 120.00,\r\n        \"urlFoto\": \"localhost/imagenes/67.jpg\",\r\n        \"disponible\": 0\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/admin/productos/6",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"admin",
+								"productos",
+								"6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE UN PRODUCTO",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiaWRSb2wiOjIsImlhdCI6MTU4OTQ1OTcwOSwiZXhwIjoxNTg5NDY2OTA5fQ.8XBN7OYyQpVkA-9Xz4gmdi8ra8lS8hoqK08uiKh6ZW4",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/admin/productos/5",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"admin",
+								"productos",
+								"5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET TODOS LOS CLIENTES",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiaWRSb2wiOjIsImlhdCI6MTU4OTQ2MDY2NywiZXhwIjoxNTg5NDY3ODY3fQ.ZXRF79hVarLk2DwDSAwXqjntwwQ6KkNWnRGOKMLVmSk",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/admin/clientes",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"admin",
+								"clientes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET TODOS LOS EMPLEADOS",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiaWRSb2wiOjIsImlhdCI6MTU4OTQ2MDY2NywiZXhwIjoxNTg5NDY3ODY3fQ.ZXRF79hVarLk2DwDSAwXqjntwwQ6KkNWnRGOKMLVmSk",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/admin/empleados",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"admin",
+								"empleados"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PATCH HACER ADMIN",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWRSb2wiOjQsImlhdCI6MTU4OTQ1OTM2MywiZXhwIjoxNTg5NDY2NTYzfQ.lWqIdcUQoLmtiN7nsY_JoOUmpW5Y6IVs366G_4Ka7QU",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"id\": 4,\n\t\"idRol\": 3\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/admin/empleados",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"admin",
+								"empleados"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET TODOS LOS PEDIDOS",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTEyLCJpZFJvbCI6MiwiaWF0IjoxNTg5NTY3MjIxLCJleHAiOjE1ODk1NzQ0MjF9.EQH4Fmj-gQWPYh74KmJo-Ee2z7YH6EbrkaDXtdXs3Hg",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/admin/pedidos",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"admin",
+								"pedidos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CAMBIAR ESTADO",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTExLCJpZFJvbCI6MiwiaWF0IjoxNTg5ODEzNzg1LCJleHAiOjE1ODk4MjA5ODV9.HClzXh1nsydz1fAcZBEJKin-Z9rT7pl4QtI5HBKRiZ4",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"idEstado\": 3\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/admin/pedidos/estados/9",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"admin",
+								"pedidos",
+								"estados",
+								"9"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "usuarios",
+			"item": [
+				{
+					"name": "GET PRODUCTOS ACTIVOS",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTAzLCJpZFJvbCI6MSwiaWF0IjoxNTg5ODA3Nzc5LCJleHAiOjE1ODk4MTQ5Nzl9.2D3dL3NxicNPhzV4tGPpbrmunaZIq_jTEkh4ET65xmQ",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/usuarios/productos",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"usuarios",
+								"productos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST UN USUARIO",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\t\"usuario\": \"juanito\",\r\n        \"password\": \"1234\",\r\n        \"mail\": \"juani@gmail22.com\",\r\n        \"nombre\": \"Juan\",\r\n        \"apellido\": \"Perez\",\r\n        \"telefono\": \"351 4896951\",\r\n        \"direccion\": \"Puerto Príncipe 1232\"\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/usuarios/usuario",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"usuarios",
+								"usuario"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PATCH DESACTIVAR USUARIO",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwiaWRSb2wiOjEsImlhdCI6MTU4OTQ1OTQ4MCwiZXhwIjoxNTg5NDY2NjgwfQ.OY7xgsZNRikWamIgHnEbsLKdqW4cjN8seFUEpx8SQiY",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/usuarios/desactivar",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"usuarios",
+								"desactivar"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST UN LOGIN",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\t\"usuario\": \"pablito\",\r\n        \"password\": \"1234\"\r\n        \r\n\t\t\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/usuarios/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"usuarios",
+								"login"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST UN PEDIDO",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTA2LCJpZFJvbCI6MSwiaWF0IjoxNTg5NTY0MzcyLCJleHAiOjE1ODk1NzE1NzJ9.aLM3XzIA-MqdW_oWhOFcijumvv7ReNvzi3mzDtl6--s",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"idFormaDePago\": 1,\n\t\"detalles\":[\n\t\t{\t\n\t\t\t\"idProducto\": 3,\n\t\t\t\"cantidad\": 2\n\t\t},\n\t\t{\t\n\t\t\t\"idProducto\": 12,\n\t\t\t\"cantidad\": 1\n\t\t},{\t\n\t\t\t\"idProducto\": 13,\n\t\t\t\"cantidad\": 2\n\t\t}\n\t\t]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/usuarios/pedido",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"usuarios",
+								"pedido"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PATCH CANCELAR PEDIDO",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NywiaWRSb2wiOjEsImlhdCI6MTU4OTQ2MDM3OSwiZXhwIjoxNTg5NDY3NTc5fQ.ftbdTMGMMScBCA4VpJNUrAGSyVyRb3GIwNb-dXFLX1c",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/usuarios/pedido/cancelar/5",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"usuarios",
+								"pedido",
+								"cancelar",
+								"5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET ESTADO",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTAzLCJpZFJvbCI6MSwiaWF0IjoxNTg5ODA3Nzc5LCJleHAiOjE1ODk4MTQ5Nzl9.2D3dL3NxicNPhzV4tGPpbrmunaZIq_jTEkh4ET65xmQ",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/usuarios/pedido/estado/35",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"usuarios",
+								"pedido",
+								"estado",
+								"35"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"protocolProfileBehavior": {}
+}

@@ -45,7 +45,6 @@ function postProducto(req, res) {
         })
         .then((respuesta) => {
             res.status(201).send('producto creado');
-            console.log(respuesta)
         }).catch((error) => {
             res.status(400).send('no se pudo crear el producto ' + error)
         })
@@ -58,7 +57,6 @@ function putProducto(req, res) {
     disponible=:disponible WHERE id =:id`,
         { replacements: productoNuevo })
         .then((respuesta) => {
-            //console.log(respuesta[0].affectedRows);
             if (respuesta[0].affectedRows !== 0) {
                 res.status(200).send('producto modificado satisfactoriamente')
             } else {
@@ -89,7 +87,6 @@ function hacerAdmin(req, res) {
     sequelize.query('UPDATE usuarios SET idRol=:idRol WHERE id=:id',
         { replacements: nuevoAdmin })
         .then((respuesta) => {
-            //console.log(respuesta[0].affectedRows);
             if (respuesta[0].affectedRows !== 0) {
                 res.status(202).send('usuario modificado satisfactoriamente')
             } else {
@@ -130,13 +127,13 @@ function cambiarEstado(req, res) {
         `UPDATE pedidos SET idEstado = ? WHERE id = ?`,
         { replacements: [idEstado, idPedido] })
         .then((estado) => {
-            console.log('lineas afectadas ' + estado[0].affectedRows);
             if (estado[0].affectedRows) {
                 let mensaje = {
                     horaModificación: moment().format("YYYY-MM-DD HH:mm:ss"),
                     idPedido: idPedido,
                     idModificador: req.id,
-                    detalles: estado[0].info
+                    detalles: estado[0].info,
+                    idNuevoEstado: idEstado
                 }
                 res.status(200).json(mensaje)
 
@@ -148,14 +145,14 @@ function cambiarEstado(req, res) {
         })
 }
 
-    module.exports = {
-        getTodosProductos,
-        getClientes,
-        getEmpleados,
-        postProducto,
-        putProducto,
-        deleteProducto,
-        hacerAdmin,
-        getPedidos,
-        cambiarEstado
-    }
+module.exports = {
+    getTodosProductos,
+    getClientes,
+    getEmpleados,
+    postProducto,
+    putProducto,
+    deleteProducto,
+    hacerAdmin,
+    getPedidos,
+    cambiarEstado
+}
