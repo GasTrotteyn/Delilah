@@ -37,8 +37,8 @@ function esDueño(req, res, next) {
 }
 
 function datosCompletosHacerAdmin(req, res, next) {
-    let datos = req.body;
-    if (datos.id && datos.idRol <= 5) {
+    let {id,idRol} = req.body;
+    if (id && idRol <= 5) {
         next();
     } else {
         res.status(400).send('faltan datos, o alguno es inválido')

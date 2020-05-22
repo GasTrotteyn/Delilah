@@ -3,16 +3,16 @@ const firma = require('../config/firma.json')
 
 
 function datosCompletosRegistro(req, res, next) {
-    let datos = req.body;
-    if (datos.usuario && datos.password && datos.mail && datos.nombre && datos.apellido && datos.telefono && datos.direccion) {
+    let { usuario, password, mail, nombre, apellido, telefono, direccion } = req.body;
+    if (usuario && password && mail && nombre && apellido && telefono && direccion) {
         next();
     } else {
         res.status(400).send('faltan datos, llenar todos los campos')
     }
 }
 function datosCompletosLogin(req, res, next) {
-    let datos = req.body;
-    if ((datos.usuario || datos.mail) && datos.password) {
+    let {usuario,mail,password} = req.body;
+    if ((usuario || mail) && password) {
         next();
     } else {
         res.status(400).send('faltan datos, llenar todos los campos')
@@ -21,7 +21,7 @@ function datosCompletosLogin(req, res, next) {
 
 function estaLogueado(req, res, next) {
     const token = req.headers.authorization.split(' ')[1];
-    try{
+    try {
         const decodificado = jwt.verify(token, firma);
         if (decodificado) {
             req.idRol = decodificado.idRol;
@@ -31,14 +31,14 @@ function estaLogueado(req, res, next) {
             res.status(401).send('login inválido')
         }
     }
-    catch(error){
+    catch (error) {
         res.status(401).send('login inválido')
     }
 }
 
-function datosComlpetosPedido (req, res, next) {
-    let datos = req.body;
-    if (datos.detalles && datos.idFormaDePago) {
+function datosComlpetosPedido(req, res, next) {
+    let {detalles, idFormaDePago} = req.body;
+    if (detalles && idFormaDePago) {
         next();
     } else {
         res.status(400).send('faltan datos, llenar todos los campos')
