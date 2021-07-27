@@ -1,104 +1,134 @@
-const urldb = require("../config/urldb.json")
-const Sequelize = require('sequelize');
+const urldb = require("../conf/urldb.json");
+const Sequelize = require("sequelize");
 const sequelize = new Sequelize(urldb);
 const moment = require("moment");
 
 function getTodosProductos(req, res) {
-    sequelize.query(`SELECT * FROM productos`,
-        { type: sequelize.QueryTypes.SELECT })
+    sequelize
+        .query(`SELECT * FROM productos`, { type: sequelize.QueryTypes.SELECT })
         .then((respuesta) => {
             res.status(200).json(respuesta);
-        }).catch((error) => {
-            res.status(500).send('algo salió mal: ' + error);
         })
+        .catch((error) => {
+            res.status(500).send("algo salió mal: " + error);
+        });
 }
 
 function getClientes(req, res) {
-    sequelize.query(`SELECT * FROM usuarios WHERE idRol = 1 OR idRol = 5`,
-        { type: sequelize.QueryTypes.SELECT })
+    sequelize
+        .query(`SELECT * FROM usuarios WHERE idRol = 1 OR idRol = 5`, {
+            type: sequelize.QueryTypes.SELECT,
+        })
         .then((respuesta) => {
             res.status(200).json(respuesta);
-        }).catch((error) => {
-            res.status(500).send('salió por el cath del controller ' + error);
         })
+        .catch((error) => {
+            res.status(500).send("salió por el cath del controller " + error);
+        });
 }
 
 function getEmpleados(req, res) {
-    sequelize.query(`SELECT * FROM usuarios WHERE idRol >1 AND idRol<5 `,
-        { type: sequelize.QueryTypes.SELECT })
+    sequelize
+        .query(`SELECT * FROM usuarios WHERE idRol >1 AND idRol<5 `, {
+            type: sequelize.QueryTypes.SELECT,
+        })
         .then((respuesta) => {
             res.status(200).json(respuesta);
-        }).catch((error) => {
-            res.status(500).send('salió por el cath del controller ' + error);
         })
+        .catch((error) => {
+            res.status(500).send("salió por el cath del controller " + error);
+        });
 }
 
 function postProducto(req, res) {
     let producto = req.body;
-    sequelize.query(`INSERT INTO productos (nombre, precioUnitario, urlFoto, disponible) VALUES (?, ?, ?, ?)`,
-        {
-            replacements: [
-                producto.nombre,
-                producto.precioUnitario,
-                producto.urlFoto,
-                producto.disponible]
-        })
+    sequelize
+        .query(
+            `INSERT INTO productos (nombre, precioUnitario, urlFoto, disponible) VALUES (?, ?, ?, ?)`,
+            {
+                replacements: [
+                    producto.nombre,
+                    producto.precioUnitario,
+                    producto.urlFoto,
+                    producto.disponible,
+                ],
+            }
+        )
         .then((respuesta) => {
-            res.status(201).send('producto creado');
-        }).catch((error) => {
-            res.status(400).send('no se pudo crear el producto ' + error)
+            res.status(201).send("producto creado");
         })
+        .catch((error) => {
+            res.status(400).send("no se pudo crear el producto " + error);
+        });
 }
 
 function putProducto(req, res) {
     let productoNuevo = req.body;
     productoNuevo.id = req.params.id;
-    sequelize.query(`UPDATE productos SET nombre=:nombre, precioUnitario=:precioUnitario, urlFoto=:urlFoto,
+    sequelize
+        .query(
+            `UPDATE productos SET nombre=:nombre, precioUnitario=:precioUnitario, urlFoto=:urlFoto,
     disponible=:disponible WHERE id =:id`,
-        { replacements: productoNuevo })
+            { replacements: productoNuevo }
+        )
         .then((respuesta) => {
             if (respuesta[0].affectedRows !== 0) {
-                res.status(200).send('producto modificado satisfactoriamente')
+                res.status(200).send("producto modificado satisfactoriamente");
             } else {
-                res.status(400).send('el producto que se desea modificar no existe')
+                res.status(400).send(
+                    "el producto que se desea modificar no existe"
+                );
             }
-        }).catch((error) => {
-            res.status(400).send('no se pudo modificar el producto: ' + error)
         })
+        .catch((error) => {
+            res.status(400).send("no se pudo modificar el producto: " + error);
+        });
 }
 
 function deleteProducto(req, res) {
     let eliminado = req.params.id;
-    sequelize.query(`DELETE FROM productos WHERE id=?`,
-        { replacements: [eliminado] })
+    sequelize
+        .query(`DELETE FROM productos WHERE id=?`, {
+            replacements: [eliminado],
+        })
         .then((respuesta) => {
             if (respuesta[0].affectedRows !== 0) {
                 res.status(204).send();
             } else {
-                res.status(400).send('el producto que se desea eliminar no existe');
+                res.status(400).send(
+                    "el producto que se desea eliminar no existe"
+                );
             }
-        }).catch((error) => {
-            res.status(500).send('salió por el catch del controller' + error);
         })
+        .catch((error) => {
+            res.status(500).send("salió por el catch del controller" + error);
+        });
 }
 
 function hacerAdmin(req, res) {
     let nuevoAdmin = req.body;
-    sequelize.query('UPDATE usuarios SET idRol=:idRol WHERE id=:id',
-        { replacements: nuevoAdmin })
+    sequelize
+        .query("UPDATE usuarios SET idRol=:idRol WHERE id=:id", {
+            replacements: nuevoAdmin,
+        })
         .then((respuesta) => {
             if (respuesta[0].affectedRows !== 0) {
-                res.status(202).send('usuario modificado satisfactoriamente')
+                res.status(202).send("usuario modificado satisfactoriamente");
             } else {
-                res.status(400).send('el usuario que se desea modificar no existe')
+                res.status(400).send(
+                    "el usuario que se desea modificar no existe"
+                );
             }
-        }).catch((error) => {
-            res.status(400).send('no se pudo modificar el usuario: ' + error)
         })
+        .catch((error) => {
+            res.status(400).send("no se pudo modificar el usuario: " + error);
+        });
 }
 
 function getPedidos(req, res) {
-    sequelize.query(`SELECT p.idEstado, e.descripcion AS estado, p.hora, p.id AS idPedido , pr.nombre AS producto, r.cantidad, 
+    sequelize
+        .query(
+            `SELECT p.idEstado, e.descripcion AS estado, p.hora, p.id AS idPedido , pr.nombre AS producto, r.cantidad,
     fp.descripcion AS formaDePago, p.precioTotal, u.nombre, u.apellido, u.direccion
     FROM pedidos p
     JOIN renglones r ON p.id = r.idPedido
@@ -107,25 +137,28 @@ function getPedidos(req, res) {
     JOIN estados e ON p.idEstado = e.id
     JOIN formasDePago fp ON p.idFormaDePago = fp.id
     ORDER BY idPedido DESC`
-    ).then((respuesta) => {
-        let pedidos = respuesta[0];
-        let agrupado = pedidos.reduce(function (acc, element) {
-            acc[element.idPedido] = acc[element.idPedido] || [];
-            acc[element.idPedido].push(element);
-            return acc;
-        }, Object.create(null));
-        res.status(200).json(agrupado);
-    }).catch((error) => {
-        res.status(500).send(error);
-    })
+        )
+        .then((respuesta) => {
+            let pedidos = respuesta[0];
+            let agrupado = pedidos.reduce(function (acc, element) {
+                acc[element.idPedido] = acc[element.idPedido] || [];
+                acc[element.idPedido].push(element);
+                return acc;
+            }, Object.create(null));
+            res.status(200).json(agrupado);
+        })
+        .catch((error) => {
+            res.status(500).send(error);
+        });
 }
 
 function cambiarEstado(req, res) {
     let idPedido = parseInt(req.params.idPedido);
     let idEstado = req.body.idEstado;
-    sequelize.query(
-        `UPDATE pedidos SET idEstado = ? WHERE id = ?`,
-        { replacements: [idEstado, idPedido] })
+    sequelize
+        .query(`UPDATE pedidos SET idEstado = ? WHERE id = ?`, {
+            replacements: [idEstado, idPedido],
+        })
         .then((estado) => {
             if (estado[0].affectedRows) {
                 let mensaje = {
@@ -133,16 +166,20 @@ function cambiarEstado(req, res) {
                     idPedido: idPedido,
                     idModificador: req.id,
                     detalles: estado[0].info,
-                    idNuevoEstado: idEstado
-                }
-                res.status(200).json(mensaje)
-
+                    idNuevoEstado: idEstado,
+                };
+                res.status(200).json(mensaje);
             } else {
-                res.status(400).send('el pedido que se desea modificar no existe ó ya tiene el estado solicitado')
+                res.status(400).send(
+                    "el pedido que se desea modificar no existe ó ya tiene el estado solicitado"
+                );
             }
-        }).catch((error) => {
-            res.status(401).send('el idEstado introducido no es válido ' + error)
         })
+        .catch((error) => {
+            res.status(401).send(
+                "el idEstado introducido no es válido " + error
+            );
+        });
 }
 
 module.exports = {
@@ -154,5 +191,5 @@ module.exports = {
     deleteProducto,
     hacerAdmin,
     getPedidos,
-    cambiarEstado
-}
+    cambiarEstado,
+};
